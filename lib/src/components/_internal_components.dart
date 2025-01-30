@@ -3,6 +3,7 @@
 // that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -527,15 +528,20 @@ class PressDetector extends StatelessWidget {
               bottom: height - (heightPerSlot * (i + 1)),
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
-                onTap: () => onDateTap?.call(
-                  DateTime(
-                    date.year,
-                    date.month,
-                    date.day,
-                    0,
-                    minuteSlotSize.minutes * i,
-                  ),
-                ),
+                onTap: () {
+                  onDateTap?.call(
+                    DateTime(
+                      date.year,
+                      date.month,
+                      date.day,
+                      0,
+                      minuteSlotSize.minutes * i,
+                    ),
+                  );
+                  log(
+                    'Mouse Tap: ${DateTime(date.year, date.month, date.day, 0, minuteSlotSize.minutes * i)}',
+                  );
+                },
                 onLongPress: () => onDateLongPress?.call(
                   DateTime(
                     date.year,

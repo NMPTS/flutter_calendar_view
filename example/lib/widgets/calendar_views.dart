@@ -11,14 +11,14 @@ import 'week_view_widget.dart';
 class CalendarViews extends StatelessWidget {
   final CalendarView view;
 
-  const CalendarViews({super.key, this.view = CalendarView.month});
+  const CalendarViews({super.key, this.view = CalendarView.week});
 
-  final _breakPoint = 490.0;
+  // final _breakPoint = 490.0;
 
   @override
   Widget build(BuildContext context) {
-    final availableWidth = MediaQuery.of(context).size.width;
-    final width = min(_breakPoint, availableWidth);
+    final availableWidth = MediaQuery.of(context).size.width - 400;
+    final width = availableWidth;
 
     return Container(
       height: double.infinity,

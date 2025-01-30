@@ -250,6 +250,12 @@ class WeekView<T extends Object?> extends StatefulWidget {
   /// Flag to keep scrollOffset of pages on page change
   final bool keepScrollOffset;
 
+  /// Called when user hocer on top of a hour slot.
+  final Widget onHoverWidget;
+
+  /// Called when user hover on top of a hour slot.
+  final void Function(DateTime dateTime, Offset position) onHover;
+
   /// Main widget for week view.
   const WeekView({
     Key? key,
@@ -310,6 +316,8 @@ class WeekView<T extends Object?> extends StatefulWidget {
     this.fullDayHeaderTextConfig,
     this.keepScrollOffset = false,
     this.onTimestampTap,
+    required this.onHoverWidget,
+    required this.onHover,
   })  : assert(!(onHeaderTitleTap != null && weekPageHeaderBuilder != null),
             "can't use [onHeaderTitleTap] & [weekPageHeaderBuilder] simultaneously"),
         assert((timeLineOffset) >= 0,
@@ -770,6 +778,8 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
         onDateTap: widget.onDateTap,
         onDateLongPress: widget.onDateLongPress,
         startHour: _startHour,
+        onHover: widget.onHover,
+        onHoverWidget: widget.onHoverWidget,
       );
 
   /// Default builder for week line.

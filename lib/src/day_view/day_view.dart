@@ -226,6 +226,12 @@ class DayView<T extends Object?> extends StatefulWidget {
   /// Flag to keep scrollOffset of pages on page change
   final bool keepScrollOffset;
 
+  /// Called when user hocer on top of a hour slot.
+  final Widget onHoverWidget;
+
+  /// Called when user hover on top of a hour slot.
+  final void Function(DateTime dateTime, Offset position) onHover;
+
   /// Main widget for day view.
   const DayView({
     Key? key,
@@ -277,6 +283,8 @@ class DayView<T extends Object?> extends StatefulWidget {
     this.endHour = Constants.hoursADay,
     this.keepScrollOffset = false,
     this.onTimestampTap,
+    required this.onHoverWidget,
+    required this.onHover,
   })  : assert(!(onHeaderTitleTap != null && dayTitleBuilder != null),
             "can't use [onHeaderTitleTap] & [dayTitleBuilder] simultaneously"),
         assert(timeLineOffset >= 0,
@@ -651,6 +659,8 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
         onDateTap: widget.onDateTap,
         onDateLongPress: widget.onDateLongPress,
         startHour: widget.startHour,
+        onHover: widget.onHover,
+        onHoverWidget: widget.onHoverWidget,
       );
 
   /// Default timeline builder this builder will be used if

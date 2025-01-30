@@ -2,6 +2,9 @@
 // Use of this source code is governed by a MIT-style license
 // that can be found in the LICENSE file.
 
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../calendar_event_data.dart';
@@ -22,6 +25,9 @@ class DefaultPressDetector extends StatelessWidget {
     required this.minuteSlotSize,
     this.onDateTap,
     this.onDateLongPress,
+    required this.onHover,
+    required this.onHoverWidget,
+    required this.onExit,
     this.startHour = 0,
   });
 
@@ -32,6 +38,9 @@ class DefaultPressDetector extends StatelessWidget {
   final MinuteSlotSize minuteSlotSize;
   final DateTapCallback? onDateTap;
   final DatePressCallback? onDateLongPress;
+  final void Function(DateTime dateTime, Offset position) onHover;
+  final void Function() onExit;
+  final Widget onHoverWidget;
   final int startHour;
 
   @override
@@ -50,18 +59,30 @@ class DefaultPressDetector extends StatelessWidget {
               left: 0,
               right: 0,
               bottom: height - (heightPerSlot * (i + 1)),
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onLongPress: () => onDateLongPress?.call(
-                  getSlotDateTime(i),
-                ),
-                onTap: () => onDateTap?.call(
-                  getSlotDateTime(i),
-                ),
-                child: SizedBox(
-                  width: width,
-                  height: heightPerSlot,
-                ),
+              child: HoverBuilder(
+                builder: (context, isHovered) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onLongPress: () => onDateLongPress?.call(
+                      getSlotDateTime(i),
+                    ),
+                    onTap: () => onDateTap?.call(
+                      getSlotDateTime(i),
+                    ),
+                    child: isHovered
+                        ? SizedBox(
+                            width: width,
+                            height: heightPerSlot,
+                            child: onHoverWidget)
+                        : SizedBox(
+                            width: width,
+                            height: heightPerSlot,
+                          ),
+                  );
+                },
+                onHover: onHover,
+                dateTime: getSlotDateTime(i),
+                onExit: onExit,
               ),
             ),
         ],
@@ -112,5 +133,60 @@ class DefaultEventTile<T> extends StatelessWidget {
     } else {
       return SizedBox.shrink();
     }
+  }
+}
+
+class HoverBuilder extends StatefulWidget {
+  final Widget Function(BuildContext context, bool isHovered) builder;
+  final void Function(DateTime dateTime, Offset position) onHover;
+  final void Function() onExit;
+  final DateTime dateTime;
+
+  HoverBuilder({
+    required this.builder,
+    required this.onHover,
+    required this.dateTime,
+    required this.onExit,
+  });
+
+  @override
+  _HoverBuilderState createState() => _HoverBuilderState();
+}
+
+class _HoverBuilderState extends State<HoverBuilder> {
+  bool _isHovered = false;
+  Offset _hoverPosition = Offset.zero;
+
+  void _onEnter(PointerEvent details) {
+    setState(() {
+      _isHovered = true;
+
+      _hoverPosition = (context.findRenderObject() as RenderBox)
+          .globalToLocal(details.position);
+
+      widget.onHover(widget.dateTime, _hoverPosition);
+    });
+  }
+
+  void _onExit(PointerEvent details) {
+    setState(() {
+      _isHovered = false;
+    });
+
+    widget.onExit();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: _onEnter,
+      onExit: _onExit,
+      child: widget.builder(context, _isHovered),
+    );
   }
 }

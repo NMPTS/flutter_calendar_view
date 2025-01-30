@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +62,28 @@ class DayViewWidget extends StatelessWidget {
         showTime: true,
         showTimeBackgroundView: true,
       ),
+      onHover: (dateTime, position) {
+        log("Hovering on ${dateTime.hour}:${dateTime.minute} at ${position.dx},${position.dy}");
+      },
+      onHoverWidget: Container(
+        decoration: BoxDecoration(
+          color: Colors.pink,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 5,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+      ),
+      onDateTap: (date) {
+        SnackBar snackBar = SnackBar(
+          content: Text("On tap: ${date.day} ${date.month} ${date.year}"),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      },
     );
   }
 
