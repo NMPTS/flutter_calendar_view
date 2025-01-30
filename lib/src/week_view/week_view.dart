@@ -256,6 +256,8 @@ class WeekView<T extends Object?> extends StatefulWidget {
   /// Called when user hover on top of a hour slot.
   final void Function(DateTime dateTime, Offset position) onHover;
 
+  final void Function() onHoverExit;
+
   /// Main widget for week view.
   const WeekView({
     Key? key,
@@ -318,6 +320,7 @@ class WeekView<T extends Object?> extends StatefulWidget {
     this.onTimestampTap,
     required this.onHoverWidget,
     required this.onHover,
+    required this.onHoverExit,
   })  : assert(!(onHeaderTitleTap != null && weekPageHeaderBuilder != null),
             "can't use [onHeaderTitleTap] & [weekPageHeaderBuilder] simultaneously"),
         assert((timeLineOffset) >= 0,
@@ -780,6 +783,7 @@ class WeekViewState<T extends Object?> extends State<WeekView<T>> {
         startHour: _startHour,
         onHover: widget.onHover,
         onHoverWidget: widget.onHoverWidget,
+        onExit: widget.onHoverExit,
       );
 
   /// Default builder for week line.

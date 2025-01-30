@@ -232,6 +232,8 @@ class DayView<T extends Object?> extends StatefulWidget {
   /// Called when user hover on top of a hour slot.
   final void Function(DateTime dateTime, Offset position) onHover;
 
+  final void Function() onExit;
+
   /// Main widget for day view.
   const DayView({
     Key? key,
@@ -281,6 +283,7 @@ class DayView<T extends Object?> extends StatefulWidget {
     this.emulateVerticalOffsetBy = 0,
     this.onEventDoubleTap,
     this.endHour = Constants.hoursADay,
+    required this.onExit,
     this.keepScrollOffset = false,
     this.onTimestampTap,
     required this.onHoverWidget,
@@ -661,6 +664,7 @@ class DayViewState<T extends Object?> extends State<DayView<T>> {
         startHour: widget.startHour,
         onHover: widget.onHover,
         onHoverWidget: widget.onHoverWidget,
+        onExit: widget.onExit,
       );
 
   /// Default timeline builder this builder will be used if

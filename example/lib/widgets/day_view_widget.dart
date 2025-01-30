@@ -78,6 +78,9 @@ class DayViewWidget extends StatelessWidget {
           ],
         ),
       ),
+      onExit: () {
+        log("Exit");
+      },
       onDateTap: (date) {
         SnackBar snackBar = SnackBar(
           content: Text("On tap: ${date.day} ${date.month} ${date.year}"),

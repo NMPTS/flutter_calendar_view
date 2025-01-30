@@ -50,6 +50,10 @@ class _WeekViewWidgetState extends State<WeekViewWidget> {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       },
+      onHoverExit: () {
+        log("Hover exit");
+        _overlayEntry?.remove();
+      },
       onHover: (dateTime, position) {
         log("Hovering on ${dateTime.hour}:${dateTime.minute} at ${position.dx},${position.dy}");
         // create a custom hover widget here
